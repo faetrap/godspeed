@@ -21,81 +21,83 @@ const useResponsive = () => {
 };
 
 // SKILLS - Transferrable connections (smaller bubbles)
+// These are core skills that connect across multiple jobs
 const SKILLS = [
-  { id: 'relationships', label: 'Relationships', emoji: '🤝', color: '#00D4FF' },
-  { id: 'storytelling', label: 'Storytelling', emoji: '📖', color: '#FF6B6B' },
-  { id: 'events', label: 'Events', emoji: '🎪', color: '#4ECDC4' },
-  { id: 'analytical', label: 'Analytical', emoji: '🔍', color: '#FFE66D' },
-  { id: 'crypto', label: 'Crypto Native', emoji: '⛓️', color: '#A855F7' },
-  { id: 'ownership', label: 'Ownership', emoji: '🏃', color: '#F97316' },
+  { id: 'skill1', label: 'Core Skill 1', emoji: '⭐', color: '#00D4FF' },
+  { id: 'skill2', label: 'Core Skill 2', emoji: '⭐', color: '#A855F7' },
+  { id: 'skill3', label: 'Core Skill 3', emoji: '⭐', color: '#4ECDC4' },
+  { id: 'skill4', label: 'Core Skill 4', emoji: '⭐', color: '#FFE66D' },
+  { id: 'skill5', label: 'Core Skill 5', emoji: '⭐', color: '#F97316' },
+  { id: 'skill6', label: 'Core Skill 6', emoji: '⭐', color: '#22C55E' },
 ];
 
 // JOBS - Main experiences (bigger bubbles) - repositioned to avoid overlap
+// Each job connects to skills - skills that appear in multiple jobs show transferrable abilities
 const JOBS = [
   {
     id: 'job1',
     title: 'Job Title 1',
     company: 'Company A',
-    skills: ['relationships', 'storytelling', 'events', 'analytical', 'crypto', 'ownership'],
+    skills: ['skill1', 'skill2', 'skill3', 'skill4', 'skill5', 'skill6'],
     x: 0.15,
     y: 0.22,
     stories: {
-      relationships: "Describe how you built and maintained relationships in this role. What stakeholders did you work with? How did you manage cross-functional collaboration?",
-      storytelling: "Describe your communication and content work. What narratives did you craft? How did you translate complex ideas into accessible content?",
-      events: "Describe your event coordination experience. What events did you help organize? What was your role and impact?",
-      analytical: "Describe your analytical contributions. What insights did you gather? How did data inform your decisions?",
-      crypto: "Describe your web3/crypto experience here, or replace this skill with something relevant to your background.",
-      ownership: "Describe how you took initiative and drove results. What did you own end-to-end?",
+      skill1: "Describe how you demonstrated this skill in this role. What did you do? What was the impact?",
+      skill2: "Describe how you demonstrated this skill in this role. What did you do? What was the impact?",
+      skill3: "Describe how you demonstrated this skill in this role. What did you do? What was the impact?",
+      skill4: "Describe how you demonstrated this skill in this role. What did you do? What was the impact?",
+      skill5: "Describe how you demonstrated this skill in this role. What did you do? What was the impact?",
+      skill6: "Describe how you demonstrated this skill in this role. What did you do? What was the impact?",
     },
   },
   {
     id: 'job2',
     title: 'Job Title 2',
     company: 'Company B',
-    skills: ['relationships', 'storytelling', 'ownership'],
+    skills: ['skill1', 'skill2', 'skill6'],
     x: 0.85,
     y: 0.18,
     stories: {
-      relationships: "Describe your client or stakeholder relationships in this role.",
-      storytelling: "Describe your content creation or communication work here.",
-      ownership: "Describe projects you owned and drove to completion.",
+      skill1: "Describe how you demonstrated this skill in this role.",
+      skill2: "Describe how you demonstrated this skill in this role.",
+      skill6: "Describe how you demonstrated this skill in this role.",
     },
   },
   {
     id: 'job3',
     title: 'Job Title 3',
     company: 'Company C',
-    skills: ['storytelling', 'analytical'],
+    skills: ['skill2', 'skill4'],
     x: 0.85,
     y: 0.78,
     stories: {
-      storytelling: "Describe your storytelling or content work in this role.",
-      analytical: "Describe your analytical work—research, assessments, data-driven decisions.",
+      skill2: "Describe how you demonstrated this skill in this role.",
+      skill4: "Describe how you demonstrated this skill in this role.",
     },
   },
   {
     id: 'job4',
     title: 'Job Title 4',
     company: 'Company D',
-    skills: ['relationships', 'analytical', 'ownership'],
+    skills: ['skill1', 'skill4', 'skill6'],
     x: 0.15,
     y: 0.78,
     stories: {
-      relationships: "Describe how you managed relationships and communications.",
-      analytical: "Describe problems you identified and solutions you proposed.",
-      ownership: "Describe your operational responsibilities and what you owned.",
+      skill1: "Describe how you demonstrated this skill in this role.",
+      skill4: "Describe how you demonstrated this skill in this role.",
+      skill6: "Describe how you demonstrated this skill in this role.",
     },
   },
 ];
 
 // Fixed skill positions to avoid overlap
 const SKILL_POSITIONS = {
-  relationships: { x: 0.32, y: 0.38 },
-  storytelling: { x: 0.68, y: 0.32 },
-  events: { x: 0.50, y: 0.18 },
-  analytical: { x: 0.50, y: 0.82 },
-  crypto: { x: 0.32, y: 0.58 },
-  ownership: { x: 0.68, y: 0.62 },
+  skill1: { x: 0.32, y: 0.38 },
+  skill2: { x: 0.68, y: 0.32 },
+  skill3: { x: 0.50, y: 0.18 },
+  skill4: { x: 0.50, y: 0.82 },
+  skill5: { x: 0.32, y: 0.58 },
+  skill6: { x: 0.68, y: 0.62 },
 };
 
 export default function BubblePortfolio() {
@@ -114,7 +116,8 @@ export default function BubblePortfolio() {
   }, []);
 
   const canvasWidth = 900;
-  const canvasHeight = 500;
+  const canvasHeight = 560;
+  const canvasTopPadding = 60;
   // Responsive bubble sizing for better mobile experience
   const jobRadius = isVerySmallMobile ? 50 : isSmallMobile ? 55 : isMobile ? 60 : 65;
   const skillRadius = isVerySmallMobile ? 24 : isSmallMobile ? 26 : isMobile ? 27 : 28;
@@ -364,6 +367,43 @@ export default function BubblePortfolio() {
           }}>
             Your Role / Tagline
           </p>
+          <div style={{
+            fontSize: '11px',
+            color: '#555',
+            marginTop: '12px',
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: isMobile ? '6px' : '16px',
+            alignItems: isMobile ? 'center' : 'flex-start',
+            flexWrap: 'wrap',
+          }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
+              your@email.com
+            </span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+              +1 (123) 456-7890
+            </span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              City, Country
+            </span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+              @yourhandle
+            </span>
+          </div>
         </div>
         <div style={{ textAlign: isMobile ? 'center' : 'right' }}>
           <div style={{ fontSize: '12px', color: '#444', letterSpacing: '2px' }}>
@@ -459,20 +499,21 @@ export default function BubblePortfolio() {
         <div style={{
           width: '100%',
           maxWidth: isMobile ? '100%' : '1000px',
-          padding: isMobile ? '0 4px' : '0',
+          padding: isMobile ? '20px 4px' : '20px 0',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           overflow: 'visible',
         }}>
           <svg
-            viewBox={`0 0 ${canvasWidth} ${canvasHeight}`}
+            viewBox={`0 -${canvasTopPadding} ${canvasWidth} ${canvasHeight}`}
             style={{
               width: '100%',
               maxWidth: `${canvasWidth}px`,
               height: 'auto',
               opacity: mounted ? 1 : 0,
               transition: 'opacity 0.8s ease',
+              overflow: 'visible',
             }}
             onClick={(e) => {
               // Click outside to deselect - only if clicking the SVG background
@@ -485,7 +526,7 @@ export default function BubblePortfolio() {
             {/* Background rect for click detection */}
             <rect
               x="0"
-              y="0"
+              y={-canvasTopPadding}
               width={canvasWidth}
               height={canvasHeight}
               fill="transparent"
@@ -1160,6 +1201,19 @@ export default function BubblePortfolio() {
             </svg>
             your@email.com
           </a>
+          <a href="tel:+11234567890" style={{ color: '#666', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            +1 (123) 456-7890
+          </a>
+          <span style={{ color: '#666', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            City, Country
+          </span>
           <a href="https://x.com/yourhandle" target="_blank" rel="noopener noreferrer" style={{ color: '#666', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>

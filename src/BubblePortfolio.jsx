@@ -49,6 +49,13 @@ const JOBS = [
       skill5: "Describe how you demonstrated this skill in this role. What did you do? What was the impact?",
       skill6: "Describe how you demonstrated this skill in this role. What did you do? What was the impact?",
     },
+    process: [
+      { step: 1, title: 'Step 1 Title', description: 'Describe what happens in this phase of your work process for this role.' },
+      { step: 2, title: 'Step 2 Title', description: 'Describe what happens in this phase of your work process for this role.' },
+      { step: 3, title: 'Step 3 Title', description: 'Describe what happens in this phase of your work process for this role.' },
+      { step: 4, title: 'Step 4 Title', description: 'Describe what happens in this phase of your work process for this role.' },
+      { step: 5, title: 'Step 5 Title', description: 'Describe what happens in this phase of your work process for this role.' },
+    ],
   },
   {
     id: 'job2',
@@ -62,6 +69,11 @@ const JOBS = [
       skill2: "Describe how you demonstrated this skill in this role.",
       skill6: "Describe how you demonstrated this skill in this role.",
     },
+    process: [
+      { step: 1, title: 'Step 1 Title', description: 'Describe what happens in this phase of your work process for this role.' },
+      { step: 2, title: 'Step 2 Title', description: 'Describe what happens in this phase of your work process for this role.' },
+      { step: 3, title: 'Step 3 Title', description: 'Describe what happens in this phase of your work process for this role.' },
+    ],
   },
   {
     id: 'job3',
@@ -74,6 +86,12 @@ const JOBS = [
       skill2: "Describe how you demonstrated this skill in this role.",
       skill4: "Describe how you demonstrated this skill in this role.",
     },
+    process: [
+      { step: 1, title: 'Step 1 Title', description: 'Describe what happens in this phase of your work process for this role.' },
+      { step: 2, title: 'Step 2 Title', description: 'Describe what happens in this phase of your work process for this role.' },
+      { step: 3, title: 'Step 3 Title', description: 'Describe what happens in this phase of your work process for this role.' },
+      { step: 4, title: 'Step 4 Title', description: 'Describe what happens in this phase of your work process for this role.' },
+    ],
   },
   {
     id: 'job4',
@@ -87,6 +105,13 @@ const JOBS = [
       skill4: "Describe how you demonstrated this skill in this role.",
       skill6: "Describe how you demonstrated this skill in this role.",
     },
+    process: [
+      { step: 1, title: 'Step 1 Title', description: 'Describe what happens in this phase of your work process for this role.' },
+      { step: 2, title: 'Step 2 Title', description: 'Describe what happens in this phase of your work process for this role.' },
+      { step: 3, title: 'Step 3 Title', description: 'Describe what happens in this phase of your work process for this role.' },
+      { step: 4, title: 'Step 4 Title', description: 'Describe what happens in this phase of your work process for this role.' },
+      { step: 5, title: 'Step 5 Title', description: 'Describe what happens in this phase of your work process for this role.' },
+    ],
   },
 ];
 
@@ -107,6 +132,7 @@ export default function BubblePortfolio() {
   const [hoveredSkill, setHoveredSkill] = useState(null);
   const [mounted, setMounted] = useState(false);
   const [showTooltip, setShowTooltip] = useState(true); // Show tooltip hint until first click
+  const [jobTab, setJobTab] = useState('skills'); // 'skills' | 'process'
 
   // Responsive breakpoints
   const { isMobile, isSmallMobile, isVerySmallMobile } = useResponsive();
@@ -718,6 +744,7 @@ export default function BubblePortfolio() {
                         setSelectedSkill(null);
                       }
                       setSelectedJob(job.id);
+                      setJobTab('skills');
                     }
                   }}
                   onMouseEnter={() => !isMobile && setHoveredJob(job.id)}
@@ -807,7 +834,7 @@ export default function BubblePortfolio() {
         {(activeStory || jobStories || skillJobs) && (
           <div style={{
             width: '100%',
-            maxWidth: '800px',
+            maxWidth: '1100px',
             marginTop: isMobile ? '24px' : '32px',
           }}>
             {/* Single story (job + skill selected) */}
@@ -911,39 +938,197 @@ export default function BubblePortfolio() {
                     RESET
                   </button>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: isVerySmallMobile ? '1fr' : `repeat(auto-fit, minmax(${isSmallMobile ? '220px' : '260px'}, 1fr))`, gap: isMobile ? '16px' : '24px' }}>
-                  {jobStories.skills.map(({ skill, story }) => (
-                    <div key={skill.id} style={{
-                      background: 'rgba(0,0,0,0.2)',
-                      borderRadius: '4px',
-                      padding: '20px',
-                    }}>
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        marginBottom: '12px',
-                      }}>
-                        <span style={{ fontSize: '18px' }}>{skill.emoji}</span>
-                        <span style={{
-                          fontSize: '12px',
-                          color: skill.color,
-                          letterSpacing: '1px',
-                          textTransform: 'uppercase',
-                        }}>
-                          {skill.label}
-                        </span>
-                      </div>
-                      <div style={{
-                        fontSize: '13px',
-                        lineHeight: 1.8,
-                        color: '#bbb',
-                      }}>
-                        {story}
-                      </div>
-                    </div>
+
+                {/* Tab bar */}
+                <div style={{
+                  display: 'flex',
+                  gap: '0',
+                  marginBottom: '24px',
+                  borderBottom: '1px solid #1a1a2e',
+                }}>
+                  {[
+                    { key: 'skills', label: 'CORE SKILLS' },
+                    { key: 'process', label: 'WORK PROCESS' },
+                  ].map(tab => (
+                    <button
+                      key={tab.key}
+                      onClick={() => setJobTab(tab.key)}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        borderBottom: jobTab === tab.key ? '2px solid #00D4FF' : '2px solid transparent',
+                        color: jobTab === tab.key ? '#fff' : '#555',
+                        padding: isMobile ? '10px 16px' : '10px 20px',
+                        fontSize: '11px',
+                        letterSpacing: '1.5px',
+                        cursor: 'pointer',
+                        fontFamily: 'Space Mono',
+                        transition: 'color 0.2s, border-color 0.2s',
+                      }}
+                    >
+                      {tab.label}
+                    </button>
                   ))}
                 </div>
+
+                {/* Core Skills tab */}
+                {jobTab === 'skills' && (
+                  <div style={{ display: 'grid', gridTemplateColumns: isVerySmallMobile ? '1fr' : `repeat(auto-fit, minmax(${isSmallMobile ? '220px' : '260px'}, 1fr))`, gap: isMobile ? '16px' : '24px' }}>
+                    {jobStories.skills.map(({ skill, story }) => (
+                      <div key={skill.id} style={{
+                        background: 'rgba(0,0,0,0.2)',
+                        borderRadius: '4px',
+                        padding: '20px',
+                      }}>
+                        <div style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          marginBottom: '12px',
+                        }}>
+                          <span style={{ fontSize: '18px' }}>{skill.emoji}</span>
+                          <span style={{
+                            fontSize: '12px',
+                            color: skill.color,
+                            letterSpacing: '1px',
+                            textTransform: 'uppercase',
+                          }}>
+                            {skill.label}
+                          </span>
+                        </div>
+                        <div style={{
+                          fontSize: '13px',
+                          lineHeight: 1.8,
+                          color: '#bbb',
+                        }}>
+                          {story}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Work Process tab */}
+                {jobTab === 'process' && jobStories.job.process && (
+                  isMobile ? (
+                    /* Mobile: full-width stacked cards */
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {jobStories.job.process.map((step) => (
+                        <div key={step.step} style={{
+                          background: 'rgba(0,0,0,0.2)',
+                          borderRadius: '4px',
+                          padding: '16px',
+                          display: 'flex',
+                          gap: '14px',
+                          alignItems: 'flex-start',
+                        }}>
+                          <div style={{
+                            width: '28px',
+                            height: '28px',
+                            borderRadius: '50%',
+                            background: 'rgba(0, 212, 255, 0.1)',
+                            border: '1px solid #00D4FF',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '11px',
+                            color: '#00D4FF',
+                            fontFamily: 'Space Mono',
+                            flexShrink: 0,
+                            marginTop: '1px',
+                          }}>
+                            {step.step}
+                          </div>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{
+                              fontSize: '12px',
+                              color: '#fff',
+                              letterSpacing: '1px',
+                              textTransform: 'uppercase',
+                              marginBottom: '6px',
+                            }}>
+                              {step.title}
+                            </div>
+                            <div style={{
+                              fontSize: '13px',
+                              lineHeight: 1.7,
+                              color: '#888',
+                            }}>
+                              {step.description}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    /* Desktop: horizontal stepper */
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                    }}>
+                      {jobStories.job.process.map((step, i) => (
+                        <div key={step.step} style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          flex: 1,
+                        }}>
+                          {/* Step indicator row with connectors */}
+                          <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            width: '100%',
+                          }}>
+                            {i > 0 && (
+                              <div style={{ flex: 1, height: '1px', background: '#1a1a2e' }} />
+                            )}
+                            <div style={{
+                              width: '32px',
+                              height: '32px',
+                              borderRadius: '50%',
+                              background: 'rgba(0, 212, 255, 0.1)',
+                              border: '1px solid #00D4FF',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '12px',
+                              color: '#00D4FF',
+                              fontFamily: 'Space Mono',
+                              flexShrink: 0,
+                            }}>
+                              {step.step}
+                            </div>
+                            {i < jobStories.job.process.length - 1 && (
+                              <div style={{ flex: 1, height: '1px', background: '#1a1a2e' }} />
+                            )}
+                          </div>
+                          {/* Step content */}
+                          <div style={{
+                            textAlign: 'center',
+                            padding: '12px 8px 0',
+                          }}>
+                            <div style={{
+                              fontSize: '12px',
+                              color: '#fff',
+                              letterSpacing: '1px',
+                              textTransform: 'uppercase',
+                              marginBottom: '6px',
+                            }}>
+                              {step.title}
+                            </div>
+                            <div style={{
+                              fontSize: '12px',
+                              lineHeight: 1.7,
+                              color: '#888',
+                            }}>
+                              {step.description}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )
+                )}
               </div>
             )}
 

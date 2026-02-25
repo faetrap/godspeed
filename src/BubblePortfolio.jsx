@@ -133,6 +133,8 @@ export default function BubblePortfolio() {
   const [mounted, setMounted] = useState(false);
   const [showTooltip, setShowTooltip] = useState(true); // Show tooltip hint until first click
   const [jobTab, setJobTab] = useState('skills'); // 'skills' | 'process'
+  const [viewMode, setViewMode] = useState('bubble'); // 'bubble' | 'timeline'
+  const [activeStudy, setActiveStudy] = useState(0); // carousel active index
 
   // Responsive breakpoints
   const { isMobile, isSmallMobile, isVerySmallMobile } = useResponsive();
@@ -276,6 +278,15 @@ export default function BubblePortfolio() {
     return cuteMessages[hash % cuteMessages.length];
   };
 
+  // Switch view mode and clear selections
+  const handleViewModeChange = (mode) => {
+    setViewMode(mode);
+    setSelectedJob(null);
+    setSelectedSkill(null);
+    setHoveredJob(null);
+    setHoveredSkill(null);
+  };
+
   // Hide tooltip after first click
   const handleFirstClick = () => {
     if (showTooltip) setShowTooltip(false);
@@ -386,7 +397,7 @@ export default function BubblePortfolio() {
             Your Name
           </h1>
           <p style={{
-            fontSize: isVerySmallMobile ? '10px' : '12px',
+            fontSize: isVerySmallMobile ? '12px' : '14px',
             color: '#666',
             margin: '8px 0 0 0',
             letterSpacing: '1px',
@@ -431,14 +442,6 @@ export default function BubblePortfolio() {
             </span>
           </div>
         </div>
-        <div style={{ textAlign: isMobile ? 'center' : 'right' }}>
-          <div style={{ fontSize: '12px', color: '#444', letterSpacing: '2px' }}>
-            APPLYING TO
-          </div>
-          <div style={{ fontSize: '14px', color: '#00D4FF', letterSpacing: '2px', marginTop: '4px' }}>
-            COMPANY NAME
-          </div>
-        </div>
       </header>
 
       {/* Main content - Canvas Section */}
@@ -448,80 +451,141 @@ export default function BubblePortfolio() {
         flexDirection: 'column',
         alignItems: 'center',
       }}>
-        {/* Mobile-friendly instruction */}
-        <div style={{
-          fontSize: '11px',
-          color: '#555',
+        {/* Section header */}
+        <h2 style={{
+          fontSize: isVerySmallMobile ? '18px' : isMobile ? '20px' : '24px',
+          fontWeight: 700,
+          color: '#fff',
           letterSpacing: '1px',
-          marginBottom: isMobile ? '12px' : '16px',
           textAlign: 'center',
-          padding: isMobile ? '0 16px' : '0',
+          margin: `0 0 ${isMobile ? '4px' : '6px'} 0`,
+          fontFamily: 'Space Mono',
         }}>
-          {isMobile ? 'Tap bubbles to explore!' : 'Click bubbles to explore!'}
+          Experience & Skills
+        </h2>
+        <div style={{
+          fontSize: isVerySmallMobile ? '11px' : '12px',
+          color: '#555',
+          letterSpacing: '1.5px',
+          textAlign: 'center',
+          marginBottom: isMobile ? '16px' : '20px',
+        }}>
+          HOW I'VE GROWN ACROSS EVERY ROLE
         </div>
 
-        {/* Legend and Instructions - Above Canvas */}
+        {/* View Toggle Bar */}
         <div style={{
-          width: '100%',
-          maxWidth: '800px',
-          marginBottom: isMobile ? '16px' : '24px',
           display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
           justifyContent: 'center',
-          alignItems: 'center',
-          gap: isMobile ? '16px' : '48px',
-          flexWrap: 'wrap',
+          marginBottom: isMobile ? '12px' : '16px',
         }}>
           <div style={{
             display: 'flex',
+            border: '1px solid #1a1a2e',
+            borderRadius: '4px',
+            overflow: 'hidden',
+          }}>
+            {[
+              { key: 'bubble', label: 'BUBBLE MAP' },
+              { key: 'timeline', label: 'TIMELINE' },
+            ].map(view => (
+              <button
+                key={view.key}
+                onClick={() => handleViewModeChange(view.key)}
+                style={{
+                  background: viewMode === view.key ? 'rgba(0, 212, 255, 0.08)' : 'transparent',
+                  border: 'none',
+                  borderBottom: viewMode === view.key ? '2px solid #00D4FF' : '2px solid transparent',
+                  color: viewMode === view.key ? '#fff' : '#555',
+                  padding: isMobile ? '10px 16px' : '10px 24px',
+                  fontSize: '11px',
+                  letterSpacing: '1.5px',
+                  cursor: 'pointer',
+                  fontFamily: 'Space Mono',
+                  transition: 'color 0.2s, border-color 0.2s, background 0.2s',
+                }}
+              >
+                {view.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Legend / Help Text */}
+        {viewMode === 'bubble' ? (
+          <div style={{
+            width: '100%',
+            maxWidth: '800px',
+            marginBottom: isMobile ? '16px' : '24px',
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            justifyContent: 'center',
             alignItems: 'center',
-            gap: isMobile ? '20px' : '32px',
+            gap: isMobile ? '16px' : '48px',
+            flexWrap: 'wrap',
           }}>
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '10px',
+              gap: isMobile ? '20px' : '32px',
             }}>
               <div style={{
-                width: isMobile ? '20px' : '24px',
-                height: isMobile ? '20px' : '24px',
-                borderRadius: '50%',
-                border: '2px solid #555',
-                background: 'rgba(255,255,255,0.03)',
-              }} />
-              <span style={{ fontSize: isMobile ? '11px' : '12px', color: '#666', letterSpacing: '1px' }}>
-                EXPERIENCE
-              </span>
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+              }}>
+                <div style={{
+                  width: isMobile ? '20px' : '24px',
+                  height: isMobile ? '20px' : '24px',
+                  borderRadius: '50%',
+                  border: '2px solid #555',
+                  background: 'rgba(255,255,255,0.03)',
+                }} />
+                <span style={{ fontSize: isMobile ? '11px' : '12px', color: '#666', letterSpacing: '1px' }}>
+                  EXPERIENCE
+                </span>
+              </div>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+              }}>
+                <div style={{
+                  width: isMobile ? '14px' : '16px',
+                  height: isMobile ? '14px' : '16px',
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #00D4FF 0%, #A855F7 100%)',
+                  opacity: 0.7,
+                }} />
+                <span style={{ fontSize: isMobile ? '11px' : '12px', color: '#666', letterSpacing: '1px' }}>
+                  SKILL
+                </span>
+              </div>
             </div>
             <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
+              fontSize: isMobile ? '12px' : '13px',
+              color: '#555',
+              textAlign: 'center',
+              padding: isMobile ? '0 16px' : '0',
             }}>
-              <div style={{
-                width: isMobile ? '14px' : '16px',
-                height: isMobile ? '14px' : '16px',
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #00D4FF 0%, #A855F7 100%)',
-                opacity: 0.7,
-              }} />
-              <span style={{ fontSize: isMobile ? '11px' : '12px', color: '#666', letterSpacing: '1px' }}>
-                SKILL
-              </span>
+              <span style={{ color: '#aaa' }}>Skills are transferrable.</span>
+              {' '}{isMobile ? 'Tap' : 'Click'} a <span style={{ color: '#fff' }}>job</span> or <span style={{ color: '#00D4FF' }}>skill</span> to explore.
             </div>
           </div>
+        ) : (
           <div style={{
             fontSize: isMobile ? '12px' : '13px',
             color: '#555',
             textAlign: 'center',
-            padding: isMobile ? '0 16px' : '0',
+            marginBottom: isMobile ? '16px' : '24px',
+            letterSpacing: '0.5px',
           }}>
-            <span style={{ color: '#aaa' }}>Skills are transferrable.</span>
-            {' '}{isMobile ? 'Tap' : 'Click'} a <span style={{ color: '#fff' }}>job</span> or <span style={{ color: '#00D4FF' }}>skill</span> to explore.
+            {isMobile ? 'Tap' : 'Click'} a role to explore skills & process
           </div>
-        </div>
+        )}
 
-        {/* Canvas */}
+        {/* Canvas - Bubble Map */}
+        {viewMode === 'bubble' && (
         <div style={{
           width: '100%',
           maxWidth: isMobile ? '100%' : '1000px',
@@ -829,6 +893,144 @@ export default function BubblePortfolio() {
             })}
           </svg>
         </div>
+        )}
+
+        {/* Timeline View — horizontal, left = earliest, right = latest */}
+        {viewMode === 'timeline' && (
+          <div style={{
+            width: '100%',
+            maxWidth: '1100px',
+            padding: isMobile ? '8px 0' : '16px 0',
+            overflowX: 'auto',
+            WebkitOverflowScrolling: 'touch',
+          }}>
+            {/* Horizontal rail */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              position: 'relative',
+              minWidth: isMobile ? `${JOBS.length * 200}px` : 'auto',
+              paddingTop: '20px',
+            }}>
+              {/* Connector line spanning all cards */}
+              <div style={{
+                position: 'absolute',
+                top: '26px',
+                left: isMobile ? '24px' : '32px',
+                right: isMobile ? '24px' : '32px',
+                height: '2px',
+                background: 'linear-gradient(to right, #1a1a2e, #00D4FF22, #1a1a2e)',
+                zIndex: 0,
+              }} />
+
+              {JOBS.map((job, index) => {
+                const isSelected = selectedJob === job.id;
+                const primarySkill = SKILLS.find(s => s.id === job.skills[0]);
+
+                return (
+                  <div
+                    key={job.id}
+                    onClick={() => {
+                      handleFirstClick();
+                      if (isSelected) {
+                        setSelectedJob(null);
+                      } else {
+                        setSelectedJob(job.id);
+                        setSelectedSkill(null);
+                        setJobTab('skills');
+                      }
+                    }}
+                    style={{
+                      flex: 1,
+                      minWidth: isMobile ? '180px' : '0',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      padding: '0 6px',
+                    }}
+                  >
+                    {/* Dot on rail */}
+                    <div style={{
+                      width: isMobile ? '12px' : '14px',
+                      height: isMobile ? '12px' : '14px',
+                      borderRadius: '50%',
+                      background: isSelected ? primarySkill.color : '#1a1a2e',
+                      border: `2px solid ${isSelected ? primarySkill.color : '#333'}`,
+                      transition: 'all 0.3s ease',
+                      boxShadow: isSelected ? `0 0 12px ${primarySkill.color}66` : 'none',
+                      zIndex: 1,
+                      flexShrink: 0,
+                    }} />
+
+                    {/* Job card below dot */}
+                    <div style={{
+                      marginTop: '14px',
+                      width: '100%',
+                      background: isSelected ? 'rgba(18, 18, 26, 0.95)' : 'rgba(18, 18, 26, 0.5)',
+                      border: `1px solid ${isSelected ? primarySkill.color + '44' : '#1a1a2e'}`,
+                      borderRadius: '4px',
+                      padding: isMobile ? '14px 12px' : '18px 16px',
+                      transition: 'all 0.3s ease',
+                      textAlign: 'center',
+                    }}>
+                      <div style={{
+                        fontSize: '10px',
+                        color: isSelected ? '#888' : '#555',
+                        letterSpacing: '2px',
+                        marginBottom: '6px',
+                        transition: 'color 0.3s ease',
+                      }}>
+                        {job.company.toUpperCase()}
+                      </div>
+                      <div style={{
+                        fontSize: isMobile ? '13px' : '14px',
+                        color: isSelected ? '#fff' : '#aaa',
+                        fontWeight: 700,
+                        marginBottom: '10px',
+                        transition: 'color 0.3s ease',
+                        lineHeight: 1.3,
+                      }}>
+                        {job.title}
+                      </div>
+                      {/* Skill color dots */}
+                      <div style={{ display: 'flex', gap: '5px', justifyContent: 'center' }}>
+                        {job.skills.map(skillId => {
+                          const skill = SKILLS.find(s => s.id === skillId);
+                          return (
+                            <div
+                              key={skillId}
+                              style={{
+                                width: '7px',
+                                height: '7px',
+                                borderRadius: '50%',
+                                background: skill.color,
+                                opacity: isSelected ? 0.9 : 0.35,
+                                transition: 'opacity 0.3s ease',
+                              }}
+                            />
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Earliest / Latest labels */}
+                    {index === 0 && (
+                      <div style={{ fontSize: '9px', color: '#333', letterSpacing: '1.5px', marginTop: '8px' }}>
+                        EARLIEST
+                      </div>
+                    )}
+                    {index === JOBS.length - 1 && (
+                      <div style={{ fontSize: '9px', color: '#333', letterSpacing: '1.5px', marginTop: '8px' }}>
+                        LATEST
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Story Panel - Below Canvas */}
         {(activeStory || jobStories || skillJobs) && (
@@ -890,7 +1092,7 @@ export default function BubblePortfolio() {
                 <div style={{
                   fontSize: isMobile ? '13px' : '14px',
                   lineHeight: 1.9,
-                  color: '#bbb',
+                  color: '#999',
                 }}>
                   {activeStory.story}
                 </div>
@@ -914,7 +1116,7 @@ export default function BubblePortfolio() {
                   borderBottom: '1px solid #1a1a2e',
                 }}>
                   <div>
-                    <div style={{ fontSize: isMobile ? '14px' : '16px', color: '#fff' }}>
+                    <div style={{ fontSize: isMobile ? '14px' : '16px', color: '#fff', fontWeight: 700 }}>
                       {jobStories.job.title}
                     </div>
                     <div style={{ fontSize: isMobile ? '11px' : '12px', color: '#555', letterSpacing: '1px', marginTop: '4px' }}>
@@ -999,7 +1201,7 @@ export default function BubblePortfolio() {
                         <div style={{
                           fontSize: '13px',
                           lineHeight: 1.8,
-                          color: '#bbb',
+                          color: '#999',
                         }}>
                           {story}
                         </div>
@@ -1052,7 +1254,7 @@ export default function BubblePortfolio() {
                             <div style={{
                               fontSize: '13px',
                               lineHeight: 1.7,
-                              color: '#888',
+                              color: '#999',
                             }}>
                               {step.description}
                             </div>
@@ -1117,9 +1319,9 @@ export default function BubblePortfolio() {
                               {step.title}
                             </div>
                             <div style={{
-                              fontSize: '12px',
+                              fontSize: '13px',
                               lineHeight: 1.7,
-                              color: '#888',
+                              color: '#999',
                             }}>
                               {step.description}
                             </div>
@@ -1201,7 +1403,7 @@ export default function BubblePortfolio() {
                       <div style={{
                         fontSize: '13px',
                         lineHeight: 1.8,
-                        color: '#bbb',
+                        color: '#999',
                       }}>
                         {story}
                       </div>
@@ -1214,7 +1416,7 @@ export default function BubblePortfolio() {
         )}
       </div>
 
-      {/* Why This Company Section */}
+      {/* What Do I Care About Section */}
       <section style={{
         padding: isMobile ? '48px 16px 40px' : '80px 48px 60px',
       }}>
@@ -1233,7 +1435,7 @@ export default function BubblePortfolio() {
             paddingTop: isMobile ? '0' : '6px',
             textAlign: isMobile ? 'center' : 'left',
           }}>
-            WHY THIS COMPANY
+            WHAT DO I CARE ABOUT?
           </div>
           <p style={{
             fontSize: isMobile ? '14px' : '16px',
@@ -1242,10 +1444,231 @@ export default function BubblePortfolio() {
             margin: 0,
             textAlign: isMobile ? 'center' : 'left',
           }}>
-            Write your personal motivation here. Why are you excited about this company? What draws you to their mission? How does your experience align with what they're building? Make it personal and authentic.
+            Write about what drives you here. What problems keep you up at night? What kind of work makes you lose track of time? What values guide your decisions? Make it personal and authentic.
           </p>
         </div>
       </section>
+
+      {/* Case Studies Carousel Section */}
+      {(() => {
+        const caseStudies = [
+          {
+            tag: 'DESIGN',
+            tagColor: '#A855F7',
+            title: 'Case Study Title 1',
+            challenge: 'Describe the problem or opportunity. What was broken, missing, or underperforming? Set the stakes so the reader understands why this mattered.',
+            approach: 'Describe your process. What did you research, prototype, or build? What trade-offs did you navigate? Show your thinking, not just the output.',
+            outcome: 'Describe the results. Use numbers where possible — revenue impact, time saved, user growth, error reduction. Make the value concrete.',
+          },
+          {
+            tag: 'STRATEGY',
+            tagColor: '#00D4FF',
+            title: 'Case Study Title 2',
+            challenge: 'Describe the problem or opportunity. What was broken, missing, or underperforming? Set the stakes so the reader understands why this mattered.',
+            approach: 'Describe your process. What did you research, prototype, or build? What trade-offs did you navigate? Show your thinking, not just the output.',
+            outcome: 'Describe the results. Use numbers where possible — revenue impact, time saved, user growth, error reduction. Make the value concrete.',
+          },
+          {
+            tag: 'ENGINEERING',
+            tagColor: '#4ECDC4',
+            title: 'Case Study Title 3',
+            challenge: 'Describe the problem or opportunity. What was broken, missing, or underperforming? Set the stakes so the reader understands why this mattered.',
+            approach: 'Describe your process. What did you research, prototype, or build? What trade-offs did you navigate? Show your thinking, not just the output.',
+            outcome: 'Describe the results. Use numbers where possible — revenue impact, time saved, user growth, error reduction. Make the value concrete.',
+          },
+        ];
+        const peekWidth = isMobile ? 24 : 48;
+        const cardGap = isMobile ? 12 : 16;
+
+        return (
+          <section style={{
+            padding: isMobile ? '48px 0' : '80px 0',
+            overflow: 'hidden',
+          }}>
+            <div style={{
+              fontSize: '12px',
+              color: '#444',
+              letterSpacing: '3px',
+              marginBottom: isMobile ? '20px' : '32px',
+              textAlign: 'center',
+            }}>
+              CASE STUDIES
+            </div>
+
+            {/* Carousel wrapper */}
+            <div style={{ position: 'relative', maxWidth: `${1100 + peekWidth * 2 + cardGap * 2}px`, margin: '0 auto' }}>
+              {/* Cards track */}
+              <div style={{
+                display: 'flex',
+                transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                transform: `translateX(calc(-${activeStudy} * (100% - ${peekWidth * 2}px) + ${peekWidth}px - ${activeStudy} * ${cardGap}px))`,
+                gap: `${cardGap}px`,
+              }}>
+                {caseStudies.map((study, i) => {
+                  const isActive = activeStudy === i;
+
+                  return (
+                    <div
+                      key={i}
+                      onClick={() => {
+                        if (!isActive) setActiveStudy(i);
+                      }}
+                      style={{
+                        flex: `0 0 calc(100% - ${peekWidth * 2}px)`,
+                        maxWidth: '1100px',
+                        background: isActive ? 'rgba(18, 18, 26, 0.95)' : 'rgba(18, 18, 26, 0.3)',
+                        border: `1px solid ${isActive ? '#333' : '#1a1a2e'}`,
+                        borderRadius: '4px',
+                        transition: 'all 0.4s ease',
+                        opacity: isActive ? 1 : 0.35,
+                        cursor: isActive ? 'default' : 'pointer',
+                        padding: isMobile ? '24px 16px' : '40px 48px',
+                      }}
+                    >
+                      {/* Tag + Title */}
+                      <div style={{
+                        fontSize: '10px',
+                        color: study.tagColor,
+                        letterSpacing: '2px',
+                        fontFamily: 'Space Mono',
+                        marginBottom: '12px',
+                      }}>
+                        {study.tag}
+                      </div>
+                      <h3 style={{
+                        fontSize: isMobile ? '18px' : '22px',
+                        color: isActive ? '#fff' : '#666',
+                        fontWeight: 700,
+                        margin: `0 0 ${isMobile ? '24px' : '32px'} 0`,
+                        lineHeight: 1.3,
+                        fontFamily: 'Space Mono',
+                        transition: 'color 0.3s ease',
+                      }}>
+                        {study.title}
+                      </h3>
+
+                      {/* Structured content — Challenge / Approach / Outcome */}
+                      <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr',
+                        gap: isMobile ? '20px' : '32px',
+                      }}>
+                        {[
+                          { label: 'THE CHALLENGE', text: study.challenge },
+                          { label: 'MY APPROACH', text: study.approach },
+                          { label: 'THE OUTCOME', text: study.outcome },
+                        ].map((block) => (
+                          <div key={block.label}>
+                            <div style={{
+                              fontSize: '10px',
+                              color: isActive ? '#555' : '#333',
+                              letterSpacing: '2px',
+                              marginBottom: '10px',
+                              fontFamily: 'Space Mono',
+                              transition: 'color 0.3s ease',
+                            }}>
+                              {block.label}
+                            </div>
+                            <div style={{
+                              fontSize: '13px',
+                              lineHeight: 1.8,
+                              color: isActive ? '#999' : '#444',
+                              transition: 'color 0.3s ease',
+                            }}>
+                              {block.text}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Prev / Next buttons */}
+              {activeStudy > 0 && (
+                <button
+                  onClick={() => setActiveStudy(activeStudy - 1)}
+                  style={{
+                    position: 'absolute',
+                    left: isMobile ? '4px' : '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: isMobile ? '36px' : '40px',
+                    height: isMobile ? '36px' : '40px',
+                    borderRadius: '50%',
+                    background: 'rgba(12, 12, 16, 0.85)',
+                    border: '1px solid #333',
+                    color: '#888',
+                    fontSize: '18px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontFamily: 'Space Mono',
+                    zIndex: 2,
+                    backdropFilter: 'blur(4px)',
+                  }}
+                >
+                  &#8249;
+                </button>
+              )}
+              {activeStudy < caseStudies.length - 1 && (
+                <button
+                  onClick={() => setActiveStudy(activeStudy + 1)}
+                  style={{
+                    position: 'absolute',
+                    right: isMobile ? '4px' : '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: isMobile ? '36px' : '40px',
+                    height: isMobile ? '36px' : '40px',
+                    borderRadius: '50%',
+                    background: 'rgba(12, 12, 16, 0.85)',
+                    border: '1px solid #333',
+                    color: '#888',
+                    fontSize: '18px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontFamily: 'Space Mono',
+                    zIndex: 2,
+                    backdropFilter: 'blur(4px)',
+                  }}
+                >
+                  &#8250;
+                </button>
+              )}
+            </div>
+
+            {/* Dot indicators */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '8px',
+              marginTop: isMobile ? '16px' : '24px',
+            }}>
+              {caseStudies.map((study, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveStudy(i)}
+                  style={{
+                    width: activeStudy === i ? '24px' : '8px',
+                    height: '8px',
+                    borderRadius: '4px',
+                    background: activeStudy === i ? study.tagColor : '#333',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: 0,
+                    transition: 'all 0.3s ease',
+                  }}
+                />
+              ))}
+            </div>
+          </section>
+        );
+      })()}
 
       {/* Reviews Section */}
       <section style={{
